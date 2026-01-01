@@ -1,61 +1,61 @@
 #include "pch.h"
-#include "../Èí¼ş¹¤³Ì/AccountBook.h"
+#include "AccountBook.h"
 #include <fstream>
 #include <cstdio>
 
 class AccountBookTest : public ::testing::Test {
 protected:
     void SetUp() override {
-        // Ê¹ÓÃÁÙÊ±ÎÄ¼ş½øĞĞ²âÊÔ
+        // ä½¿ç”¨ä¸´æ—¶æ–‡ä»¶è¿›è¡Œæµ‹è¯•
         testFileName = "test_account_data.txt";
         accountBook = new AccountBook(testFileName);
     }
 
     void TearDown() override {
         delete accountBook;
-        // É¾³ı²âÊÔÎÄ¼ş
+        // åˆ é™¤æµ‹è¯•æ–‡ä»¶
         std::remove(testFileName.c_str());
     }
 
     AccountBook* accountBook;
     std::string testFileName;
 
-    // ¸¨Öúº¯Êı£º¼ì²éÎÄ¼şÊÇ·ñ´æÔÚ
+    // è¾…åŠ©å‡½æ•°ï¼šæ£€æŸ¥æ–‡ä»¶æ˜¯å¦å­˜åœ¨
     bool fileExists(const std::string& filename) {
         std::ifstream file(filename);
         return file.good();
     }
 };
 
-// ²âÊÔ¹¹Ôìº¯ÊıºÍÎö¹¹º¯Êı
+// æµ‹è¯•æ„é€ å‡½æ•°å’Œææ„å‡½æ•°
 TEST_F(AccountBookTest, ConstructorAndDestructor) {
-    EXPECT_TRUE(fileExists(testFileName) || !fileExists(testFileName)); // ÎÄ¼ş¿ÉÄÜ´æÔÚÒ²¿ÉÄÜ²»´æÔÚ
+    EXPECT_TRUE(fileExists(testFileName) || !fileExists(testFileName)); // æ–‡ä»¶å¯èƒ½å­˜åœ¨ä¹Ÿå¯èƒ½ä¸å­˜åœ¨
     EXPECT_EQ(accountBook->calculateTotalIncome(), 0.0);
     EXPECT_EQ(accountBook->calculateTotalExpense(), 0.0);
 }
 
-// ²âÊÔÌí¼Ó½»Ò×¼ÇÂ¼
+// æµ‹è¯•æ·»åŠ äº¤æ˜“è®°å½•
 TEST_F(AccountBookTest, AddTransaction) {
-    // ²âÊÔÌí¼ÓÊÕÈë
-    accountBook->addTransaction(1000.0, TransactionType::INCOME, KeyType::WAGES, "¹¤×Ê", "2026-12-31");
+    // æµ‹è¯•æ·»åŠ æ”¶å…¥
+    accountBook->addTransaction(1000.0, TransactionType::INCOME, KeyType::WAGES, "å·¥èµ„", "2026-12-31");
 
-    // ²âÊÔÌí¼ÓÖ§³ö
-    accountBook->addTransaction(500.0, TransactionType::EXPENSE, KeyType::FOOD, "Íí²Í", "2026-12-31");
+    // æµ‹è¯•æ·»åŠ æ”¯å‡º
+    accountBook->addTransaction(500.0, TransactionType::EXPENSE, KeyType::FOOD, "æ™šé¤", "2026-12-31");
 
-    // ²âÊÔÌí¼ÓÎŞ±¸×¢µÄ½»Ò×
+    // æµ‹è¯•æ·»åŠ æ— å¤‡æ³¨çš„äº¤æ˜“
     accountBook->addTransaction(200.0, TransactionType::EXPENSE, KeyType::TRANSPORTATION, "", "");
 
-    // ÑéÖ¤ÎÄ¼şÒÑ´´½¨
+    // éªŒè¯æ–‡ä»¶å·²åˆ›å»º
     EXPECT_TRUE(fileExists(testFileName));
 }
 
-// ²âÊÔ¼ÆËã×ÜÊÕÈëÖ§³ö
+// æµ‹è¯•è®¡ç®—æ€»æ”¶å…¥æ”¯å‡º
 TEST_F(AccountBookTest, CalculateTotals) {
-    // Ìí¼Ó²âÊÔÊı¾İ
-    accountBook->addTransaction(1000.0, TransactionType::INCOME, KeyType::WAGES, "¹¤×Ê", "2026-12-31");
-    accountBook->addTransaction(200.0, TransactionType::INCOME, KeyType::OTHERS, "½±½ğ", "2026-12-31");
-    accountBook->addTransaction(500.0, TransactionType::EXPENSE, KeyType::FOOD, "²ÍÒû", "2026-12-31");
-    accountBook->addTransaction(300.0, TransactionType::EXPENSE, KeyType::RENT, "·¿×â", "2026-12-31");
+    // æ·»åŠ æµ‹è¯•æ•°æ®
+    accountBook->addTransaction(1000.0, TransactionType::INCOME, KeyType::WAGES, "å·¥èµ„", "2026-12-31");
+    accountBook->addTransaction(200.0, TransactionType::INCOME, KeyType::OTHERS, "å¥–é‡‘", "2026-12-31");
+    accountBook->addTransaction(500.0, TransactionType::EXPENSE, KeyType::FOOD, "é¤é¥®", "2026-12-31");
+    accountBook->addTransaction(300.0, TransactionType::EXPENSE, KeyType::RENT, "æˆ¿ç§Ÿ", "2026-12-31");
 
     double totalIncome = accountBook->calculateTotalIncome();
     double totalExpense = accountBook->calculateTotalExpense();
@@ -64,202 +64,203 @@ TEST_F(AccountBookTest, CalculateTotals) {
     EXPECT_DOUBLE_EQ(totalExpense, 800.0);
 }
 
-// ²âÊÔÉ¾³ı½»Ò×¼ÇÂ¼
+// æµ‹è¯•åˆ é™¤äº¤æ˜“è®°å½•
 TEST_F(AccountBookTest, DeleteTransaction) {
-    // Ìí¼ÓÒ»Ğ©¼ÇÂ¼
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "¼ÇÂ¼1", "2026-12-31");
-    accountBook->addTransaction(200.0, TransactionType::INCOME, KeyType::WAGES, "¼ÇÂ¼2", "2026-12-31");
+    // æ·»åŠ ä¸€äº›è®°å½•
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "è®°å½•1", "2026-12-31");
+    accountBook->addTransaction(200.0, TransactionType::INCOME, KeyType::WAGES, "è®°å½•2", "2026-12-31");
 
-    // É¾³ı´æÔÚµÄ¼ÇÂ¼
+    // åˆ é™¤å­˜åœ¨çš„è®°å½•
     EXPECT_NO_THROW(accountBook->deleteTransaction(1));
 
-    // É¾³ı²»´æÔÚµÄ¼ÇÂ¼£¨²»Ó¦¸Ã±ÀÀ££©
+    // åˆ é™¤ä¸å­˜åœ¨çš„è®°å½•ï¼ˆä¸åº”è¯¥å´©æºƒï¼‰
     EXPECT_NO_THROW(accountBook->deleteTransaction(999));
 
-    // ÑéÖ¤ÊÕÈë×Ü¶î¼õÉÙ
+    // éªŒè¯æ”¶å…¥æ€»é¢å‡å°‘
     EXPECT_DOUBLE_EQ(accountBook->calculateTotalIncome(), 200.0);
 }
 
-// ²âÊÔĞŞ¸Ä½»Ò×¼ÇÂ¼
+// æµ‹è¯•ä¿®æ”¹äº¤æ˜“è®°å½•
 TEST_F(AccountBookTest, ChangeTransaction) {
-    // Ìí¼ÓÒ»Ìõ¼ÇÂ¼
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "Ô­Ê¼±¸×¢", "2026-12-31");
+    // æ·»åŠ ä¸€æ¡è®°å½•
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "åŸå§‹å¤‡æ³¨", "2026-12-31");
 
-    // ÓÉÓÚ changeTransaction ĞèÒªÓÃ»§ÊäÈë£¬ÕâÀïÖ÷Òª²âÊÔ½Ó¿ÚÊÇ·ñ¿ÉÓÃ
-    // ÔÚÊµ¼ÊÏîÄ¿ÖĞ£¬Ó¦¸ÃÖØ¹¹Ê¹Õâ¸öº¯Êı¿É²âÊÔ£¨½«ÊäÈë×÷Îª²ÎÊı£©
+    // ç”±äº changeTransaction éœ€è¦ç”¨æˆ·è¾“å…¥ï¼Œè¿™é‡Œä¸»è¦æµ‹è¯•æ¥å£æ˜¯å¦å¯ç”¨
+    // åœ¨å®é™…é¡¹ç›®ä¸­ï¼Œåº”è¯¥é‡æ„ä½¿è¿™ä¸ªå‡½æ•°å¯æµ‹è¯•ï¼ˆå°†è¾“å…¥ä½œä¸ºå‚æ•°ï¼‰
     EXPECT_NO_THROW(accountBook->changeTransaction(1));
-    EXPECT_NO_THROW(accountBook->changeTransaction(999)); // ²»´æÔÚµÄID
+    EXPECT_NO_THROW(accountBook->changeTransaction(999)); // ä¸å­˜åœ¨çš„ID
 }
 
-// ²âÊÔÏÔÊ¾ËùÓĞ½»Ò×¼ÇÂ¼
+// æµ‹è¯•æ˜¾ç¤ºæ‰€æœ‰äº¤æ˜“è®°å½•
 TEST_F(AccountBookTest, DisplayAllTransactions) {
-    // ¿Õ¼ÇÂ¼Çé¿ö
-    accountBook->displayAllTransactions(); // Ó¦¸ÃÏÔÊ¾"ÔİÎŞ½»Ò×¼ÇÂ¼"
+    // ç©ºè®°å½•æƒ…å†µ
+    accountBook->displayAllTransactions(); // åº”è¯¥æ˜¾ç¤º"æš‚æ— äº¤æ˜“è®°å½•"
 
-    // ÓĞ¼ÇÂ¼Çé¿ö
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "²âÊÔ", "2026-12-31");
+    // æœ‰è®°å½•æƒ…å†µ
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "æµ‹è¯•", "2026-12-31");
     EXPECT_NO_THROW(accountBook->displayAllTransactions());
 }
 
-// ²âÊÔÏÔÊ¾Í³¼ÆĞÅÏ¢
+// æµ‹è¯•æ˜¾ç¤ºç»Ÿè®¡ä¿¡æ¯
 TEST_F(AccountBookTest, DisplayStatistics) {
-    // ¿Õ¼ÇÂ¼Í³¼Æ
+    // ç©ºè®°å½•ç»Ÿè®¡
     EXPECT_NO_THROW(accountBook->displayStatistics());
 
-    // ÓĞ¼ÇÂ¼Í³¼Æ
-    accountBook->addTransaction(1000.0, TransactionType::INCOME, KeyType::WAGES, "¹¤×Ê", "2026-12-31");
-    accountBook->addTransaction(500.0, TransactionType::EXPENSE, KeyType::FOOD, "²ÍÒû", "2026-12-31");
-    accountBook->addTransaction(200.0, TransactionType::EXPENSE, KeyType::TRANSPORTATION, "½»Í¨", "2026-12-31");
+    // æœ‰è®°å½•ç»Ÿè®¡
+    accountBook->addTransaction(1000.0, TransactionType::INCOME, KeyType::WAGES, "å·¥èµ„", "2026-12-31");
+    accountBook->addTransaction(500.0, TransactionType::EXPENSE, KeyType::FOOD, "é¤é¥®", "2026-12-31");
+    accountBook->addTransaction(200.0, TransactionType::EXPENSE, KeyType::TRANSPORTATION, "äº¤é€š", "2026-12-31");
 
     EXPECT_NO_THROW(accountBook->displayStatistics());
 }
 
-// ²âÊÔËÑË÷¹¦ÄÜ - ¹Ø¼ü´ÊËÑË÷
+// æµ‹è¯•æœç´¢åŠŸèƒ½ - å…³é”®è¯æœç´¢
 TEST_F(AccountBookTest, SearchByKeyword) {
-    // ×¼±¸²âÊÔÊı¾İ
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "¹¤×ÊÊÕÈë", "2026-12-31");
-    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "Îç²Í", "2026-12-31");
-    accountBook->addTransaction(30.0, TransactionType::EXPENSE, KeyType::FOOD, "Íí²Í", "2026-12-31");
+    // å‡†å¤‡æµ‹è¯•æ•°æ®
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "å·¥èµ„æ”¶å…¥", "2026-12-31");
+    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "åˆé¤", "2026-12-31");
+    accountBook->addTransaction(30.0, TransactionType::EXPENSE, KeyType::FOOD, "æ™šé¤", "2026-12-31");
 
-    // ²âÊÔËÑË÷´æÔÚµÄ¹Ø¼ü´Ê
-    EXPECT_NO_THROW(accountBook->search_by_keyword("²ÍÒû"));
-    EXPECT_NO_THROW(accountBook->search_by_keyword("food")); // Ó¢ÎÄ¹Ø¼ü´Ê
+    // æµ‹è¯•æœç´¢å­˜åœ¨çš„å…³é”®è¯
+    EXPECT_NO_THROW(accountBook->search_by_keyword("é¤é¥®"));
+    EXPECT_NO_THROW(accountBook->search_by_keyword("food")); // è‹±æ–‡å…³é”®è¯
 
-    // ²âÊÔËÑË÷²»´æÔÚµÄ¹Ø¼ü´Ê
-    EXPECT_NO_THROW(accountBook->search_by_keyword("²»´æÔÚµÄÀà±ğ"));
+    // æµ‹è¯•æœç´¢ä¸å­˜åœ¨çš„å…³é”®è¯
+    EXPECT_NO_THROW(accountBook->search_by_keyword("ä¸å­˜åœ¨çš„ç±»åˆ«"));
 }
 
-// ²âÊÔËÑË÷¹¦ÄÜ - Ê±¼äËÑË÷
+// æµ‹è¯•æœç´¢åŠŸèƒ½ - æ—¶é—´æœç´¢
 TEST_F(AccountBookTest, SearchByTime) {
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "²âÊÔ", "2026-12-31");
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "æµ‹è¯•", "2026-12-31");
 
-    // ËÑË÷µ±Ç°ÈÕÆÚ£¨ºÜ¿ÉÄÜÆ¥Åä£©
-    // ËÑË÷²»´æÔÚµÄÈÕÆÚ
+    // æœç´¢å½“å‰æ—¥æœŸï¼ˆå¾ˆå¯èƒ½åŒ¹é…ï¼‰
+    // æœç´¢ä¸å­˜åœ¨çš„æ—¥æœŸ
     EXPECT_NO_THROW(accountBook->search_by_time("2099-01-01"));
     EXPECT_NO_THROW(accountBook->search_by_time("2026"));
-    EXPECT_NO_THROW(accountBook->search_by_time("")); // ¿Õ×Ö·û´®
+    EXPECT_NO_THROW(accountBook->search_by_time("")); // ç©ºå­—ç¬¦ä¸²
 }
 
-// ²âÊÔËÑË÷¹¦ÄÜ - ÀàĞÍËÑË÷
+// æµ‹è¯•æœç´¢åŠŸèƒ½ - ç±»å‹æœç´¢
 TEST_F(AccountBookTest, SearchByType) {
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "ÊÕÈë", "2026-12-31");
-    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "Ö§³ö", "2026-12-31");
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "æ”¶å…¥", "2026-12-31");
+    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "æ”¯å‡º", "2026-12-31");
 
-    EXPECT_NO_THROW(accountBook->search_by_type("ÊÕÈë"));
+    EXPECT_NO_THROW(accountBook->search_by_type("æ”¶å…¥"));
     EXPECT_NO_THROW(accountBook->search_by_type("income"));
-    EXPECT_NO_THROW(accountBook->search_by_type("Ö§³ö"));
+    EXPECT_NO_THROW(accountBook->search_by_type("æ”¯å‡º"));
     EXPECT_NO_THROW(accountBook->search_by_type("expense"));
-    EXPECT_NO_THROW(accountBook->search_by_type("ÎŞĞ§ÀàĞÍ"));
+    EXPECT_NO_THROW(accountBook->search_by_type("æ— æ•ˆç±»å‹"));
 }
 
-// ²âÊÔËÑË÷¹¦ÄÜ - ½ğ¶îËÑË÷
+// æµ‹è¯•æœç´¢åŠŸèƒ½ - é‡‘é¢æœç´¢
 TEST_F(AccountBookTest, SearchByAmount) {
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "100ÔªÊÕÈë", "2026-12-31");
-    accountBook->addTransaction(200.0, TransactionType::INCOME, KeyType::WAGES, "200ÔªÊÕÈë", "2026-12-31");
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "100å…ƒæ”¶å…¥", "2026-12-31");
+    accountBook->addTransaction(200.0, TransactionType::INCOME, KeyType::WAGES, "200å…ƒæ”¶å…¥", "2026-12-31");
 
     EXPECT_NO_THROW(accountBook->search_by_amount(100.0));
     EXPECT_NO_THROW(accountBook->search_by_amount(200.0));
-    EXPECT_NO_THROW(accountBook->search_by_amount(999.0)); // ²»´æÔÚµÄ½ğ¶î
-    EXPECT_NO_THROW(accountBook->search_by_amount(0.0)); // Áã½ğ¶î
+    EXPECT_NO_THROW(accountBook->search_by_amount(999.0)); // ä¸å­˜åœ¨çš„é‡‘é¢
+    EXPECT_NO_THROW(accountBook->search_by_amount(0.0)); // é›¶é‡‘é¢
 }
 
-// ²âÊÔËÑË÷¹¦ÄÜ - ±¸×¢ËÑË÷
+// æµ‹è¯•æœç´¢åŠŸèƒ½ - å¤‡æ³¨æœç´¢
 TEST_F(AccountBookTest, SearchByNote) {
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "ÕâÊÇÒ»Ìõ²âÊÔ±¸×¢", "2026-12-31");
-    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "Íí²Í±¸×¢", "2026-12-31");
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "è¿™æ˜¯ä¸€æ¡æµ‹è¯•å¤‡æ³¨", "2026-12-31");
+    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "æ™šé¤å¤‡æ³¨", "2026-12-31");
 
-    EXPECT_NO_THROW(accountBook->search_by_note("²âÊÔ"));
-    EXPECT_NO_THROW(accountBook->search_by_note("±¸×¢"));
-    EXPECT_NO_THROW(accountBook->search_by_note("²»´æÔÚµÄÄÚÈİ"));
-    EXPECT_NO_THROW(accountBook->search_by_note("")); // ¿Õ×Ö·û´®
+    EXPECT_NO_THROW(accountBook->search_by_note("æµ‹è¯•"));
+    EXPECT_NO_THROW(accountBook->search_by_note("å¤‡æ³¨"));
+    EXPECT_NO_THROW(accountBook->search_by_note("ä¸å­˜åœ¨çš„å†…å®¹"));
+    EXPECT_NO_THROW(accountBook->search_by_note("")); // ç©ºå­—ç¬¦ä¸²
 }
 
-// ²âÊÔ¼ì²é¹ıÆÚ¼ÇÂ¼¹¦ÄÜ
+// æµ‹è¯•æ£€æŸ¥è¿‡æœŸè®°å½•åŠŸèƒ½
 TEST_F(AccountBookTest, CheckExpiredTransactions) {
-    // Ìí¼ÓÒ»ÌõÎ´À´¹ıÆÚµÄ¼ÇÂ¼
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "²âÊÔ", "2099-12-31");
+    // æ·»åŠ ä¸€æ¡æœªæ¥è¿‡æœŸçš„è®°å½•
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "æµ‹è¯•", "2099-12-31");
 
-    // Ìí¼ÓÒ»ÌõÒÑ¾­¹ıÆÚµÄ¼ÇÂ¼
-    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "¹ıÆÚ", "2020-01-01");
+    // æ·»åŠ ä¸€æ¡å·²ç»è¿‡æœŸçš„è®°å½•
+    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "è¿‡æœŸ", "2020-01-01");
 
     EXPECT_NO_THROW(accountBook->check());
 
-    // ¼ì²éºó£¬¹ıÆÚ¼ÇÂ¼Ó¦¸Ã±»ÒÆ³ı
+    // æ£€æŸ¥åï¼Œè¿‡æœŸè®°å½•åº”è¯¥è¢«ç§»é™¤
 }
 
-// ²âÊÔÎÄ¼ş±£´æºÍ¼ÓÔØ
+// æµ‹è¯•æ–‡ä»¶ä¿å­˜å’ŒåŠ è½½
 TEST_F(AccountBookTest, FileSaveAndLoad) {
-    // ´´½¨ĞÂµÄ AccountBook ²¢Ìí¼ÓÊı¾İ
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "±£´æ²âÊÔ", "2026-12-31");
-    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "Ê³Æ·", "2026-12-31");
+    // åˆ›å»ºæ–°çš„ AccountBook å¹¶æ·»åŠ æ•°æ®
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "ä¿å­˜æµ‹è¯•", "2026-12-31");
+    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "é£Ÿå“", "2026-12-31");
 
-    // ±£´æÎÄ¼ş
+    // ä¿å­˜æ–‡ä»¶
     EXPECT_TRUE(fileExists(testFileName));
 
-    // ´´½¨ÁíÒ»¸ö AccountBook ÊµÀı¼ÓÔØÏàÍ¬ÎÄ¼ş
+    // åˆ›å»ºå¦ä¸€ä¸ª AccountBook å®ä¾‹åŠ è½½ç›¸åŒæ–‡ä»¶
     AccountBook anotherBook(testFileName);
-    // ¼ÓÔØºóÓ¦¸ÃÓĞÊı¾İ
-    // ×¢Òâ£ºĞèÒªÑéÖ¤¼ÓÔØµÄÊı¾İÕıÈ·ĞÔ
+    // åŠ è½½ååº”è¯¥æœ‰æ•°æ®
+    // æ³¨æ„ï¼šéœ€è¦éªŒè¯åŠ è½½çš„æ•°æ®æ­£ç¡®æ€§
 }
 
-// ²âÊÔ½»Ò×¼ÇÂ¼¹ıÆÚ¼ì²éÂß¼­
+// æµ‹è¯•äº¤æ˜“è®°å½•è¿‡æœŸæ£€æŸ¥é€»è¾‘
 TEST_F(AccountBookTest, IsTransactionExpired) {
-    // ÓÉÓÚ isTransactionExpired ÊÇË½ÓĞ·½·¨£¬ÎÒÃÇÍ¨¹ı¹«ÓĞ·½·¨¼ä½Ó²âÊÔ
-    // Ìí¼ÓÒ»¸öÎŞ¹ıÆÚÊ±¼äµÄ¼ÇÂ¼
-    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "ÓÀ²»¹ıÆÚ", "");
+    // ç”±äº isTransactionExpired æ˜¯ç§æœ‰æ–¹æ³•ï¼Œæˆ‘ä»¬é€šè¿‡å…¬æœ‰æ–¹æ³•é—´æ¥æµ‹è¯•
+    // æ·»åŠ ä¸€ä¸ªæ— è¿‡æœŸæ—¶é—´çš„è®°å½•
+    accountBook->addTransaction(100.0, TransactionType::INCOME, KeyType::WAGES, "æ°¸ä¸è¿‡æœŸ", "");
 
-    // Ìí¼ÓÒ»¸ö¹ıÈ¥Ê±¼äµÄ¼ÇÂ¼
-    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "ÒÑ¹ıÆÚ", "2020-01-01");
+    // æ·»åŠ ä¸€ä¸ªè¿‡å»æ—¶é—´çš„è®°å½•
+    accountBook->addTransaction(50.0, TransactionType::EXPENSE, KeyType::FOOD, "å·²è¿‡æœŸ", "2020-01-01");
 
-    // ÔËĞĞ¼ì²é
+    // è¿è¡Œæ£€æŸ¥
     accountBook->check();
 
-    // ÏÔÊ¾Í³¼ÆĞÅÏ¢£¨»áµ÷ÓÃ check£©
+    // æ˜¾ç¤ºç»Ÿè®¡ä¿¡æ¯ï¼ˆä¼šè°ƒç”¨ checkï¼‰
     EXPECT_NO_THROW(accountBook->displayStatistics());
 }
 
-// ²âÊÔ¿ÕÎÄ¼ş´¦Àí
+// æµ‹è¯•ç©ºæ–‡ä»¶å¤„ç†
 TEST_F(AccountBookTest, EmptyFileHandling) {
-    // ´´½¨¿ÕÎÄ¼ş
+    // åˆ›å»ºç©ºæ–‡ä»¶
     std::ofstream emptyFile(testFileName);
     emptyFile.close();
 
-    // ´´½¨ĞÂµÄ AccountBook ÊµÀı¼ÓÔØ¿ÕÎÄ¼ş
+    // åˆ›å»ºæ–°çš„ AccountBook å®ä¾‹åŠ è½½ç©ºæ–‡ä»¶
     AccountBook emptyBook(testFileName);
 
-    // ²»Ó¦¸Ã±ÀÀ£
+    // ä¸åº”è¯¥å´©æºƒ
     EXPECT_NO_THROW(emptyBook.displayAllTransactions());
     EXPECT_NO_THROW(emptyBook.displayStatistics());
 }
 
-// ²âÊÔ±ß½çÇé¿ö£º´óÁ¿¼ÇÂ¼
+// æµ‹è¯•è¾¹ç•Œæƒ…å†µï¼šå¤§é‡è®°å½•
 TEST_F(AccountBookTest, LargeNumberOfTransactions) {
-    // Ìí¼Ó¶àÌõ¼ÇÂ¼
+    // æ·»åŠ å¤šæ¡è®°å½•
     for (int i = 0; i < 100; ++i) {
         accountBook->addTransaction(i + 1.0,
             (i % 2 == 0) ? TransactionType::INCOME : TransactionType::EXPENSE,
             KeyType::OTHERS,
-            "¼ÇÂ¼" + std::to_string(i));
+            "è®°å½•" + std::to_string(i));
     }
 
-    // ÑéÖ¤Í³¼Æ
+    // éªŒè¯ç»Ÿè®¡
     EXPECT_GE(accountBook->calculateTotalIncome(), 0.0);
     EXPECT_GE(accountBook->calculateTotalExpense(), 0.0);
 
-    // ÑéÖ¤ËÑË÷¹¦ÄÜÔÚ´óÊı¾İ¼¯ÏÂÕı³£¹¤×÷
-    EXPECT_NO_THROW(accountBook->search_by_type("ÊÕÈë"));
-    EXPECT_NO_THROW(accountBook->search_by_note("¼ÇÂ¼"));
+    // éªŒè¯æœç´¢åŠŸèƒ½åœ¨å¤§æ•°æ®é›†ä¸‹æ­£å¸¸å·¥ä½œ
+    EXPECT_NO_THROW(accountBook->search_by_type("æ”¶å…¥"));
+    EXPECT_NO_THROW(accountBook->search_by_note("è®°å½•"));
 }
 
-// ²âÊÔÎŞĞ§Êı¾İ½âÎö
+// æµ‹è¯•æ— æ•ˆæ•°æ®è§£æ
 TEST_F(AccountBookTest, InvalidDataParsing) {
-    // ´´½¨Ò»¸ö°üº¬ÎŞĞ§Êı¾İµÄÎÄ¼ş
+    // åˆ›å»ºä¸€ä¸ªåŒ…å«æ— æ•ˆæ•°æ®çš„æ–‡ä»¶
     std::ofstream badFile(testFileName);
     badFile << "invalid|data|here\n";
     badFile << "1|not_a_number|0|0|2025-01-01|test|2025-12-31\n";
     badFile.close();
 
-    // ³¢ÊÔ¼ÓÔØÓ¦¸ÃÄÜ´¦Àí´íÎó¶ø²»±ÀÀ£
+    // å°è¯•åŠ è½½åº”è¯¥èƒ½å¤„ç†é”™è¯¯è€Œä¸å´©æºƒ
     AccountBook badDataBook(testFileName);
     EXPECT_NO_THROW(badDataBook.displayAllTransactions());
+
 }
