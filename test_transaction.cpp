@@ -1,98 +1,98 @@
 #include "pch.h"
-#include "../Èí¼ş¹¤³Ì/Transaction.h"
+#include "Transaction.h"
 
-// ²âÊÔ Transaction ÀàµÄ¹¹Ôìº¯ÊıºÍ Getter ·½·¨
+// æµ‹è¯• Transaction ç±»çš„æ„é€ å‡½æ•°å’Œ Getter æ–¹æ³•
 TEST(TransactionTest, ConstructorAndGetters) {
     Transaction t(1, 100.5, TransactionType::INCOME, KeyType::WAGES,
-        "2025-01-01", "¹¤×ÊÊÕÈë", "2025-12-31");
+        "2025-01-01", "å·¥èµ„æ”¶å…¥", "2025-12-31");
 
     EXPECT_EQ(t.getId(), 1);
     EXPECT_DOUBLE_EQ(t.getAmount(), 100.5);
     EXPECT_EQ(t.getType(), TransactionType::INCOME);
     EXPECT_EQ(t.getKeyword(), KeyType::WAGES);
     EXPECT_EQ(t.getDate(), "2025-01-01");
-    EXPECT_EQ(t.getNote(), "¹¤×ÊÊÕÈë");
+    EXPECT_EQ(t.getNote(), "å·¥èµ„æ”¶å…¥");
     EXPECT_EQ(t.getDeadtime(), "2025-12-31");
 }
 
-// ²âÊÔ Setter ·½·¨
+// æµ‹è¯• Setter æ–¹æ³•
 TEST(TransactionTest, Setters) {
     Transaction t(1, 100.0, TransactionType::EXPENSE, KeyType::FOOD, "2026-04-01");
 
     t.setAmount(200.0);
     t.setType(TransactionType::INCOME);
     t.setKeyword(KeyType::TRAVEL);
-    t.setNote("ĞŞ¸ÄºóµÄ±¸×¢");
+    t.setNote("ä¿®æ”¹åçš„å¤‡æ³¨");
     t.setDeadtime("2026-06-01");
 
     EXPECT_DOUBLE_EQ(t.getAmount(), 200.0);
     EXPECT_EQ(t.getType(), TransactionType::INCOME);
     EXPECT_EQ(t.getKeyword(), KeyType::TRAVEL);
-    EXPECT_EQ(t.getNote(), "ĞŞ¸ÄºóµÄ±¸×¢");
+    EXPECT_EQ(t.getNote(), "ä¿®æ”¹åçš„å¤‡æ³¨");
     EXPECT_EQ(t.getDeadtime(), "2026-06-01");
 }
 
-// ±ß½ç²âÊÔ£º²âÊÔ½ğ¶î±ß½çÖµ
+// è¾¹ç•Œæµ‹è¯•ï¼šæµ‹è¯•é‡‘é¢è¾¹ç•Œå€¼
 TEST(TransactionTest, AmountBoundary) {
-    // ²âÊÔÁãÖµ
+    // æµ‹è¯•é›¶å€¼
     Transaction t1(1, 0.0, TransactionType::INCOME, KeyType::OTHERS, "2025-02-01");
     EXPECT_DOUBLE_EQ(t1.getAmount(), 0.0);
 
-    // ²âÊÔ¸ºÖµ£¨Èç¹ûÖ§³Ö¸º½ğ¶î£©
-    // ×¢Òâ£º¸ù¾İÒµÎñÂß¼­£¬½ğ¶îÓ¦¸ÃÎªÕıÊı
+    // æµ‹è¯•è´Ÿå€¼ï¼ˆå¦‚æœæ”¯æŒè´Ÿé‡‘é¢ï¼‰
+    // æ³¨æ„ï¼šæ ¹æ®ä¸šåŠ¡é€»è¾‘ï¼Œé‡‘é¢åº”è¯¥ä¸ºæ­£æ•°
     Transaction t2(2, -100.0, TransactionType::EXPENSE, KeyType::FOOD, "2025-02-01");
     EXPECT_DOUBLE_EQ(t2.getAmount(), -100.0);
 }
 
-// ²âÊÔ keywordToString ×ª»»
+// æµ‹è¯• keywordToString è½¬æ¢
 TEST(TransactionTest, KeywordToString) {
-    EXPECT_EQ(Transaction::keywordToString(KeyType::TRAVEL), "ÂÃĞĞ");
-    EXPECT_EQ(Transaction::keywordToString(KeyType::FOOD), "²ÍÒû");
-    EXPECT_EQ(Transaction::keywordToString(KeyType::STUDY), "Ñ§Ï°");
-    EXPECT_EQ(Transaction::keywordToString(KeyType::RENT), "·¿×â");
-    EXPECT_EQ(Transaction::keywordToString(KeyType::WAGES), "¹¤×Ê");
-    EXPECT_EQ(Transaction::keywordToString(KeyType::MEDICINE), "Ò½ÁÆ");
-    EXPECT_EQ(Transaction::keywordToString(KeyType::TRANSPORTATION), "½»Í¨");
-    EXPECT_EQ(Transaction::keywordToString(KeyType::OTHERS), "ÆäËû");
-    EXPECT_EQ(Transaction::keywordToString(static_cast<KeyType>(999)), "Î´Öª"); // ²âÊÔÎŞĞ§Ã¶¾Ù
+    EXPECT_EQ(Transaction::keywordToString(KeyType::TRAVEL), "æ—…è¡Œ");
+    EXPECT_EQ(Transaction::keywordToString(KeyType::FOOD), "é¤é¥®");
+    EXPECT_EQ(Transaction::keywordToString(KeyType::STUDY), "å­¦ä¹ ");
+    EXPECT_EQ(Transaction::keywordToString(KeyType::RENT), "æˆ¿ç§Ÿ");
+    EXPECT_EQ(Transaction::keywordToString(KeyType::WAGES), "å·¥èµ„");
+    EXPECT_EQ(Transaction::keywordToString(KeyType::MEDICINE), "åŒ»ç–—");
+    EXPECT_EQ(Transaction::keywordToString(KeyType::TRANSPORTATION), "äº¤é€š");
+    EXPECT_EQ(Transaction::keywordToString(KeyType::OTHERS), "å…¶ä»–");
+    EXPECT_EQ(Transaction::keywordToString(static_cast<KeyType>(999)), "æœªçŸ¥"); // æµ‹è¯•æ— æ•ˆæšä¸¾
 }
 
-// ²âÊÔ stringToKeyword ×ª»»
+// æµ‹è¯• stringToKeyword è½¬æ¢
 TEST(TransactionTest, StringToKeyword) {
-    // ²âÊÔÖĞÎÄ¹Ø¼ü×Ö
-    EXPECT_EQ(Transaction::stringToKeyword("ÂÃĞĞ"), KeyType::TRAVEL);
-    EXPECT_EQ(Transaction::stringToKeyword("²ÍÒû"), KeyType::FOOD);
-    EXPECT_EQ(Transaction::stringToKeyword("Ñ§Ï°"), KeyType::STUDY);
+    // æµ‹è¯•ä¸­æ–‡å…³é”®å­—
+    EXPECT_EQ(Transaction::stringToKeyword("æ—…è¡Œ"), KeyType::TRAVEL);
+    EXPECT_EQ(Transaction::stringToKeyword("é¤é¥®"), KeyType::FOOD);
+    EXPECT_EQ(Transaction::stringToKeyword("å­¦ä¹ "), KeyType::STUDY);
 
-    // ²âÊÔÓ¢ÎÄ¹Ø¼ü×Ö
+    // æµ‹è¯•è‹±æ–‡å…³é”®å­—
     EXPECT_EQ(Transaction::stringToKeyword("travel"), KeyType::TRAVEL);
     EXPECT_EQ(Transaction::stringToKeyword("food"), KeyType::FOOD);
     EXPECT_EQ(Transaction::stringToKeyword("study"), KeyType::STUDY);
 
-    // ²âÊÔÎŞĞ§¹Ø¼ü×Ö
-    EXPECT_EQ(Transaction::stringToKeyword("²»´æÔÚ"), KeyType::OTHERS);
+    // æµ‹è¯•æ— æ•ˆå…³é”®å­—
+    EXPECT_EQ(Transaction::stringToKeyword("ä¸å­˜åœ¨"), KeyType::OTHERS);
     EXPECT_EQ(Transaction::stringToKeyword(""), KeyType::OTHERS);
 }
 
-// ²âÊÔ display ·½·¨£¨²»²âÊÔÊä³ö£¬Ö»²âÊÔÊÇ·ñÕı³£ÔËĞĞ£©
+// æµ‹è¯• display æ–¹æ³•ï¼ˆä¸æµ‹è¯•è¾“å‡ºï¼Œåªæµ‹è¯•æ˜¯å¦æ­£å¸¸è¿è¡Œï¼‰
 TEST(TransactionTest, DisplayNoCrash) {
-    Transaction t1(1, 100.0, TransactionType::INCOME, KeyType::WAGES, "2024-01-01", "ÓĞ±¸×¢", "2024-12-31");
+    Transaction t1(1, 100.0, TransactionType::INCOME, KeyType::WAGES, "2024-01-01", "æœ‰å¤‡æ³¨", "2024-12-31");
     Transaction t2(2, 50.0, TransactionType::EXPENSE, KeyType::FOOD, "2024-01-02", "", "");
 
-    // È·±£ display ·½·¨²»»á±ÀÀ£
+    // ç¡®ä¿ display æ–¹æ³•ä¸ä¼šå´©æºƒ
     EXPECT_NO_THROW(t1.display());
     EXPECT_NO_THROW(t2.display());
 }
 
-// ²âÊÔ¿Õ±¸×¢ºÍ½ØÖ¹Ê±¼ä
+// æµ‹è¯•ç©ºå¤‡æ³¨å’Œæˆªæ­¢æ—¶é—´
 TEST(TransactionTest, EmptyNoteAndDeadtime) {
     Transaction t(1, 100.0, TransactionType::INCOME, KeyType::WAGES, "2024-01-01");
 
     EXPECT_TRUE(t.getNote().empty());
     EXPECT_TRUE(t.getDeadtime().empty());
 
-    // ÉèÖÃºóÔÙÇå¿Õ
-    t.setNote("²âÊÔ±¸×¢");
+    // è®¾ç½®åå†æ¸…ç©º
+    t.setNote("æµ‹è¯•å¤‡æ³¨");
     t.setDeadtime("2024-12-31");
     EXPECT_FALSE(t.getNote().empty());
     EXPECT_FALSE(t.getDeadtime().empty());
@@ -103,24 +103,24 @@ TEST(TransactionTest, EmptyNoteAndDeadtime) {
     EXPECT_TRUE(t.getDeadtime().empty());
 }
 
-// ²âÊÔÏàµÈ²Ù×÷·û£¨Èç¹ûĞèÒª±È½Ï£©
+// æµ‹è¯•ç›¸ç­‰æ“ä½œç¬¦ï¼ˆå¦‚æœéœ€è¦æ¯”è¾ƒï¼‰
 TEST(TransactionTest, CopyAndAssignment) {
     Transaction t1(1, 100.0, TransactionType::INCOME, KeyType::WAGES, "2026-01-01");
 
-    // ²âÊÔ¿½±´¹¹Ôì
+    // æµ‹è¯•æ‹·è´æ„é€ 
     Transaction t2 = t1;
     EXPECT_EQ(t2.getId(), 1);
     EXPECT_DOUBLE_EQ(t2.getAmount(), 100.0);
 
-    // ĞŞ¸Ä t2£¬È·±£²»Ó°Ïì t1
+    // ä¿®æ”¹ t2ï¼Œç¡®ä¿ä¸å½±å“ t1
     t2.setAmount(200.0);
     EXPECT_DOUBLE_EQ(t1.getAmount(), 100.0);
     EXPECT_DOUBLE_EQ(t2.getAmount(), 200.0);
 }
 
-// ²âÊÔ±ßÔµÈÕÆÚ¸ñÊ½
+// æµ‹è¯•è¾¹ç¼˜æ—¥æœŸæ ¼å¼
 TEST(TransactionTest, DateFormats) {
-    // ¸÷ÖÖ¿ÉÄÜµÄÈÕÆÚ¸ñÊ½
+    // å„ç§å¯èƒ½çš„æ—¥æœŸæ ¼å¼
     Transaction t1(1, 100.0, TransactionType::INCOME, KeyType::WAGES, "2024-01-01");
     Transaction t2(2, 200.0, TransactionType::INCOME, KeyType::WAGES, "2024/01/01");
     Transaction t3(3, 300.0, TransactionType::INCOME, KeyType::WAGES, "2024-12-31 23:59:59");
@@ -130,7 +130,7 @@ TEST(TransactionTest, DateFormats) {
     EXPECT_EQ(t3.getDate(), "2024-12-31 23:59:59");
 }
 
-// ²âÊÔÀàĞÍ×ª»»
+// æµ‹è¯•ç±»å‹è½¬æ¢
 TEST(TransactionTest, TypeTesting) {
     Transaction income(1, 100.0, TransactionType::INCOME, KeyType::WAGES, "2024-01-01");
     Transaction expense(2, 50.0, TransactionType::EXPENSE, KeyType::FOOD, "2024-01-01");
@@ -138,4 +138,5 @@ TEST(TransactionTest, TypeTesting) {
     EXPECT_EQ(income.getType(), TransactionType::INCOME);
     EXPECT_EQ(expense.getType(), TransactionType::EXPENSE);
     EXPECT_NE(income.getType(), expense.getType());
+
 }
