@@ -41,7 +41,7 @@ jobs:
     - name: Compile and run Transaction tests
       run: |
         echo "Compiling Transaction tests..."
-        g++ -std=c++11 -I. \
+        g++ -std=c++14 -I. \
             test_transaction.cpp Transaction.cpp \
             -lgtest -lgtest_main -lpthread \
             -o test_transaction
@@ -55,7 +55,7 @@ jobs:
     - name: Compile and run AccountBook tests
       run: |
         echo "Compiling AccountBook tests..."
-        g++ -std=c++11 -I. \
+        g++ -std=c++14 -I. \
             test_accountbook.cpp AccountBook.cpp Transaction.cpp \
             -lgtest -lgtest_main -lpthread \
             -o test_accountbook
